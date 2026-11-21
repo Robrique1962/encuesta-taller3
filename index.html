@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuesta Taller 3 — Investigación e Innovación</title>
+    <title>Encuesta Taller III — Investigación e Innovación</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -566,7 +566,22 @@
         let activeMemberTabIndex = 0;
         let lastSubmittedPayload = null;
         let toastTimeout = null;
+const APPS_SCRIPT_URL = 'PEGA_AQUI_TU_URL_TERMINADA_EN_EXEC';
 
+        async function sendToGoogleForm(payload) {
+            try {
+                await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                console.log('Respuesta enviada a Google Forms');
+            } catch (error) {
+                console.error('Error enviando a Google Forms:', error);
+                showToast('Hubo un problema al sincronizar con la nube, descarga tu respaldo CSV/JSON.', true);
+            }
+        }
         const criteriaList = [
             {
                 id: 'compromiso',
@@ -1176,7 +1191,8 @@
                 estadoParticipacion: 'No participa en el curso',
                 fechaHoraEnvio: timestamp
             };
-
+            
+            sendToGoogleForm(lastSubmittedPayload);
             document.getElementById('surveyForm').classList.add('hidden');
             document.getElementById('stepperNav').classList.add('hidden');
             document.getElementById('headerProgressContainer').classList.add('hidden');
@@ -1373,6 +1389,7 @@
             }
 
             lastSubmittedPayload = formData;
+            sendToGoogleForm(formData);
             renderFullSummaryDashboard(formData);
         }
 
