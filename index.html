@@ -566,9 +566,16 @@
         let activeMemberTabIndex = 0;
         let lastSubmittedPayload = null;
         let toastTimeout = null;
-const APPS_SCRIPT_URL = 'PEGA_AQUI_TU_URL_TERMINADA_EN_EXEC';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyaxV4NymzA0XRLyiT6hvbD2u7jh_F4TBC0ksMjCgqYf3LwM4swKVxg9kR2_IicIKI_1Q/exec';
 
-        async function sendToGoogleForm(payload) {
+async function sendToGoogleForm(payload, triggerBtn = null) {
+            const originalHtml = triggerBtn ? triggerBtn.innerHTML : '';
+            if (triggerBtn) {
+                triggerBtn.disabled = true;
+                triggerBtn.classList.add('opacity-70', 'cursor-not-allowed');
+                triggerBtn.innerHTML = '<span>Guardando respuestas...</span>';
+            }
+
             try {
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
@@ -576,12 +583,17 @@ const APPS_SCRIPT_URL = 'PEGA_AQUI_TU_URL_TERMINADA_EN_EXEC';
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
-                console.log('Respuesta enviada a Google Forms');
             } catch (error) {
                 console.error('Error enviando a Google Forms:', error);
-                showToast('Hubo un problema al sincronizar con la nube, descarga tu respaldo CSV/JSON.', true);
+                showToast('Hubo un problema al sincronizar con Google Forms. Descarga tu respaldo CSV/JSON.', true);
+            } finally {
+                if (triggerBtn) {
+                    triggerBtn.disabled = false;
+                    triggerBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                    triggerBtn.innerHTML = originalHtml;
+                }
             }
-        }
+        }        }
         const criteriaList = [
             {
                 id: 'compromiso',
