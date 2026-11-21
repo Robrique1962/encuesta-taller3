@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuesta Taller III — Investigación e Innovación</title>
+    <title>Encuesta Taller 3 — Investigación e Innovación</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -566,9 +566,17 @@
         let activeMemberTabIndex = 0;
         let lastSubmittedPayload = null;
         let toastTimeout = null;
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyaxV4NymzA0XRLyiT6hvbD2u7jh_F4TBC0ksMjCgqYf3LwM4swKVxg9kR2_IicIKI_1Q/exec';
 
-async function sendToGoogleForm(payload, triggerBtn = null) {
+        // REEMPLAZA ESTA URL CON LA URL DE TU IMPLEMENTACIÓN DE APPS SCRIPT (TERMINADA EN /exec)
+        const APPS_SCRIPT_URL = 'PEGA_AQUI_TU_URL_TERMINADA_EN_EXEC';
+
+        async function sendToGoogleForm(payload, triggerBtn = null) {
+            if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('PEGA_AQUI_TU_URL')) {
+                console.warn('APPS_SCRIPT_URL no configurada todavía.');
+                showToast('Falta configurar la URL de Google Apps Script en el código.', true);
+                return;
+            }
+
             const originalHtml = triggerBtn ? triggerBtn.innerHTML : '';
             if (triggerBtn) {
                 triggerBtn.disabled = true;
@@ -585,7 +593,7 @@ async function sendToGoogleForm(payload, triggerBtn = null) {
                 });
             } catch (error) {
                 console.error('Error enviando a Google Forms:', error);
-                showToast('Hubo un problema al sincronizar con Google Forms. Descarga tu respaldo CSV/JSON.', true);
+                showToast('Hubo un problema al sincronizar con la nube. Descarga tu respaldo CSV/JSON.', true);
             } finally {
                 if (triggerBtn) {
                     triggerBtn.disabled = false;
@@ -593,7 +601,8 @@ async function sendToGoogleForm(payload, triggerBtn = null) {
                     triggerBtn.innerHTML = originalHtml;
                 }
             }
-        }        }
+        }
+
         const criteriaList = [
             {
                 id: 'compromiso',
@@ -1190,7 +1199,7 @@ async function sendToGoogleForm(payload, triggerBtn = null) {
             }
         }
 
-        function submitInactiveStudent(name, email) {
+        async function submitInactiveStudent(name, email) {
             const timestamp = new Date().toLocaleString('es-CL', {
                 dateStyle: 'long',
                 timeStyle: 'short'
@@ -1203,8 +1212,10 @@ async function sendToGoogleForm(payload, triggerBtn = null) {
                 estadoParticipacion: 'No participa en el curso',
                 fechaHoraEnvio: timestamp
             };
-            
-            sendToGoogleForm(lastSubmittedPayload);
+
+            const btnStep1 = document.getElementById('step1NextBtn');
+            await sendToGoogleForm(lastSubmittedPayload, btnStep1);
+
             document.getElementById('surveyForm').classList.add('hidden');
             document.getElementById('stepperNav').classList.add('hidden');
             document.getElementById('headerProgressContainer').classList.add('hidden');
@@ -1314,7 +1325,7 @@ async function sendToGoogleForm(payload, triggerBtn = null) {
             return true;
         }
 
-        function handleFormSubmit(event) {
+        async function handleFormSubmit(event) {
             event.preventDefault();
             const name = document.getElementById('studentName').value.trim();
             const email = document.getElementById('studentEmail').value.trim();
@@ -1401,7 +1412,9 @@ async function sendToGoogleForm(payload, triggerBtn = null) {
             }
 
             lastSubmittedPayload = formData;
-            sendToGoogleForm(formData);
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            await sendToGoogleForm(formData, submitBtn);
+
             renderFullSummaryDashboard(formData);
         }
 
