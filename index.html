@@ -585,12 +585,15 @@
             }
 
             try {
-                await fetch(APPS_SCRIPT_URL, {
+                const resp = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
+                const result = await resp.json().catch(() => null);
+                if (!result || !result.ok) {
+                    throw new Error((result && result.error) || ('HTTP ' + resp.status));
+                }
             } catch (error) {
                 console.error('Error enviando a Google Forms:', error);
                 showToast('Hubo un problema al sincronizar con la nube. Descarga tu respaldo CSV/JSON.', true);
