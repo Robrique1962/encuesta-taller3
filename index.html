@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta Taller 3 — Investigación e Innovación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        editorial: {
+                            bg: '#F8FAFC',
+                            surface: '#FFFFFF',
+                            border: '#E2E8F0',
+                            navy: '#1E3A8A',
+                            royal: '#2563EB',
+                            emerald: '#059669'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F8FAFC;
+            color: #0F172A;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+        /* Smooth transitions */
+        .fade-slide-in {
+            animation: fadeSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Top Academic Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-900 to-blue-600 text-white flex items-center justify-center shadow-sm flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[11px] font-bold uppercase tracking-widest text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-md">Curso Taller 3</span>
+                            <span class="text-xs text-slate-400 font-medium hidden sm:inline">• Proyecto de Investigación e Innovación</span>
+                        </div>
+                        <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight mt-0.5">Evaluación y Autoevaluación de Equipo</h1>
+                    </div>
+                </div>
+
+                <!-- Real-time Progress Indicator Pill -->
+                <div id="headerProgressContainer" class="flex items-center space-x-3 bg-slate-50 border border-slate-200/80 px-3.5 py-2 rounded-xl">
+                    <div class="text-right">
+                        <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Avance completado</span>
+                        <span id="progressPercentText" class="text-sm font-bold text-blue-900">0%</span>
+                    </div>
+                    <div class="w-24 sm:w-28 h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div id="progressBarFill" class="h-full bg-gradient-to-r from-blue-800 to-blue-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3-Step Visual Stepper -->
+            <nav id="stepperNav" aria-label="Progreso de la encuesta" class="mt-4 pt-3 border-t border-slate-100">
+                <ol class="grid grid-cols-3 gap-2 sm:gap-4">
+                    <li id="stepper-item-1" class="flex items-center space-x-2.5 p-2 rounded-xl bg-blue-50/70 border border-blue-200 transition-all">
+                        <span id="stepper-badge-1" class="w-6 h-6 rounded-full bg-blue-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <div class="min-w-0">
+                            <span class="block text-[10px] font-semibold uppercase tracking-wider text-blue-600">Paso 1</span>
+                            <span class="block text-xs font-bold text-slate-900 truncate">Identificación</span>
+                        </div>
+                    </li>
+                    <li id="stepper-item-2" class="flex items-center space-x-2.5 p-2 rounded-xl bg-slate-50 border border-slate-200/70 opacity-70 transition-all">
+                        <span id="stepper-badge-2" class="w-6 h-6 rounded-full bg-slate-300 text-slate-700 text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <div class="min-w-0">
+                            <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Paso 2</span>
+                            <span class="block text-xs font-bold text-slate-700 truncate">Organización</span>
+                        </div>
+                    </li>
+                    <li id="stepper-item-3" class="flex items-center space-x-2.5 p-2 rounded-xl bg-slate-50 border border-slate-200/70 opacity-70 transition-all">
+                        <span id="stepper-badge-3" class="w-6 h-6 rounded-full bg-slate-300 text-slate-700 text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
+                        <div class="min-w-0">
+                            <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Paso 3</span>
+                            <span class="block text-xs font-bold text-slate-700 truncate">Evaluación</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Toast Notification Banner -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden max-w-sm w-full transform transition-all duration-300">
+        <div id="toastInner" class="bg-slate-900 text-white px-4 py-3.5 rounded-2xl shadow-xl border border-slate-700/60 flex items-start space-x-3">
+            <span id="toastIcon" class="mt-0.5 flex-shrink-0 text-emerald-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </span>
+            <p id="toastMessage" class="text-xs sm:text-sm font-medium leading-snug"></p>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 overflow-hidden">
+            <form id="surveyForm" onsubmit="handleFormSubmit(event)" novalidate>
+
+                <!-- ==================== STEP 1: IDENTIFICATION & PARTICIPATION ==================== -->
+                <div id="step1" class="p-6 sm:p-10 space-y-8 fade-slide-in">
+                    <div class="border-b border-slate-100 pb-5">
+                        <span class="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+                            <span>Paso 1 de 3</span>
+                            <span>•</span>
+                            <span>Registro Inicial</span>
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-3 tracking-tight">Identificación del Estudiante</h2>
+                        <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">
+                            Completa tus datos personales para registrar tu participación en el trabajo final de investigación e innovación y recibir una copia de tus respuestas.
+                        </p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Question 1: Full Name -->
+                        <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5 transition focus-within:border-blue-400 focus-within:bg-white focus-within:shadow-sm">
+                            <label for="studentName" class="block text-sm font-bold text-slate-800">
+                                1. Nombre completo del alumno <span class="text-rose-500">*</span>
+                            </label>
+                            <p class="text-xs text-slate-500 mt-0.5 mb-3">Ingresa tus nombres y apellidos tal como figuran en la nómina del curso.</p>
+                            <input type="text" id="studentName" oninput="updateProgress()" placeholder="Ej. Camila Andrea Soto Morales"
+                                class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition text-sm">
+                        </div>
+
+                        <!-- Question 2: Email -->
+                        <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5 transition focus-within:border-blue-400 focus-within:bg-white focus-within:shadow-sm">
+                            <label for="studentEmail" class="block text-sm font-bold text-slate-800">
+                                2. Correo electrónico institucional o personal <span class="text-rose-500">*</span>
+                            </label>
+                            <p class="text-xs text-slate-500 mt-0.5 mb-3">A esta dirección se preparará el envío con el comprobante detallado de tu autoevaluación.</p>
+                            <input type="email" id="studentEmail" oninput="updateProgress()" placeholder="Ej. camila.soto@universidad.cl"
+                                class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition text-sm">
+                        </div>
+
+                        <!-- Question 3: Active Participation -->
+                        <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5 space-y-3">
+                            <label class="block text-sm font-bold text-slate-800">
+                                3. ¿Aún estás participando activamente en el curso Taller 3? <span class="text-rose-500">*</span>
+                            </label>
+                            <p class="text-xs text-slate-500">Tu respuesta determina si continúas con la evaluación del equipo o si finalizas el formulario aquí.</p>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                                <!-- Option YES -->
+                                <label id="card-part-yes" class="relative flex items-start space-x-3.5 p-4 rounded-2xl bg-white border-2 border-slate-200 cursor-pointer hover:border-blue-400 transition-all">
+                                    <input type="radio" name="isParticipating" value="yes" onchange="handleParticipationChange(true)" class="mt-1 text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <div>
+                                        <span class="block text-sm font-bold text-slate-900">Sí, continúo participando</span>
+                                        <span class="block text-xs text-slate-500 mt-0.5">Avanzar a la organización del equipo, autoevaluación y coevaluación.</span>
+                                    </div>
+                                </label>
+
+                                <!-- Option NO -->
+                                <label id="card-part-no" class="relative flex items-start space-x-3.5 p-4 rounded-2xl bg-white border-2 border-slate-200 cursor-pointer hover:border-amber-400 transition-all">
+                                    <input type="radio" name="isParticipating" value="no" onchange="handleParticipationChange(false)" class="mt-1 text-amber-600 focus:ring-amber-500 h-4 w-4">
+                                    <div>
+                                        <span class="block text-sm font-bold text-slate-900">No, ya no participo en el curso</span>
+                                        <span class="block text-xs text-slate-500 mt-0.5">Finalizar y enviar únicamente los datos ingresados hasta este punto.</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Early Exit Notice Card (Amber) -->
+                        <div id="inactiveNotice" class="hidden fade-slide-in bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start space-x-3.5">
+                            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="text-sm text-amber-950 space-y-1">
+                                <p class="font-bold">Cierre anticipado de la encuesta</p>
+                                <p class="text-xs sm:text-sm text-amber-800 leading-relaxed">
+                                    Has indicado que no continúas participando en el curso Taller 3. Se omitirán las secciones de dinámica de equipo y evaluación de compañeros, registrando únicamente tus respuestas de las preguntas 1, 2 y 3.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex justify-end">
+                        <button type="button" id="step1NextBtn" onclick="validateStep1()"
+                            class="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white font-semibold px-7 py-3.5 rounded-xl transition shadow-sm flex items-center justify-center space-x-2 text-sm">
+                            <span id="step1BtnLabel">Continuar al Paso 2</span>
+                            <svg id="step1BtnIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ==================== STEP 2: TEAM SIZE & ORGANIZATION DYNAMICS ==================== -->
+                <div id="step2" class="hidden p-6 sm:p-10 space-y-8 fade-slide-in">
+                    <div class="border-b border-slate-100 pb-5">
+                        <span class="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+                            <span>Paso 2 de 3</span>
+                            <span>•</span>
+                            <span>Estructura y Metodología</span>
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-3 tracking-tight">Organización y Dinámica del Equipo</h2>
+                        <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">
+                            Indica la conformación de tu equipo (máximo 6 integrantes en total) y describe cómo abordaron la investigación y el desarrollo de la solución innovadora.
+                        </p>
+                    </div>
+
+                    <div class="space-y-7">
+                        <!-- Team Size Numeric Cards -->
+                        <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5 space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <label class="block text-sm font-bold text-slate-800">
+                                    4. ¿Cuántos integrantes en total conforman tu equipo (incluyéndote a ti)? <span class="text-rose-500">*</span>
+                                </label>
+                                <span id="teamSizeHelperBadge" class="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-lg">
+                                    Selecciona tamaño (2 a 6)
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500">Esto generará automáticamente tu espacio de autoevaluación más el espacio correspondiente para cada compañero.</p>
+
+                            <input type="hidden" id="teamSize" value="">
+                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1" id="teamSizeCardsGrid">
+                                <button type="button" onclick="selectTeamSize(2)" data-size="2"
+                                    class="team-size-card group p-3.5 rounded-2xl bg-white border-2 border-slate-200 hover:border-blue-400 text-center transition-all flex flex-col items-center">
+                                    <span class="text-xl font-extrabold text-slate-800 group-hover:text-blue-700">2</span>
+                                    <span class="text-[11px] font-medium text-slate-500 mt-0.5">Tú + 1 comp.</span>
+                                </button>
+                                <button type="button" onclick="selectTeamSize(3)" data-size="3"
+                                    class="team-size-card group p-3.5 rounded-2xl bg-white border-2 border-slate-200 hover:border-blue-400 text-center transition-all flex flex-col items-center">
+                                    <span class="text-xl font-extrabold text-slate-800 group-hover:text-blue-700">3</span>
+                                    <span class="text-[11px] font-medium text-slate-500 mt-0.5">Tú + 2 comp.</span>
+                                </button>
+                                <button type="button" onclick="selectTeamSize(4)" data-size="4"
+                                    class="team-size-card group p-3.5 rounded-2xl bg-white border-2 border-slate-200 hover:border-blue-400 text-center transition-all flex flex-col items-center">
+                                    <span class="text-xl font-extrabold text-slate-800 group-hover:text-blue-700">4</span>
+                                    <span class="text-[11px] font-medium text-slate-500 mt-0.5">Tú + 3 comp.</span>
+                                </button>
+                                <button type="button" onclick="selectTeamSize(5)" data-size="5"
+                                    class="team-size-card group p-3.5 rounded-2xl bg-white border-2 border-slate-200 hover:border-blue-400 text-center transition-all flex flex-col items-center">
+                                    <span class="text-xl font-extrabold text-slate-800 group-hover:text-blue-700">5</span>
+                                    <span class="text-[11px] font-medium text-slate-500 mt-0.5">Tú + 4 comp.</span>
+                                </button>
+                                <button type="button" onclick="selectTeamSize(6)" data-size="6"
+                                    class="team-size-card group p-3.5 rounded-2xl bg-white border-2 border-slate-200 hover:border-blue-400 text-center transition-all flex flex-col items-center col-span-2 sm:col-span-1">
+                                    <span class="text-xl font-extrabold text-slate-800 group-hover:text-blue-700">6</span>
+                                    <span class="text-[11px] font-medium text-slate-500 mt-0.5">Tú + 5 comp.</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Question 5: Organization & Division of Tasks -->
+                        <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5 space-y-3">
+                            <label class="block text-sm font-bold text-slate-800">
+                                5. Modalidad de organización y división de tareas en el proyecto <span class="text-rose-500">*</span>
+                            </label>
+                            <p class="text-xs text-slate-500">Marca todas las estrategias que aplicaron para coordinar la investigación y el diseño de la solución.</p>
+                            <div class="grid grid-cols-1 gap-2.5 pt-1">
+                                <label class="flex items-start space-x-3 p-3.5 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-blue-300 transition">
+                                    <input type="checkbox" name="orgMethod" value="Roles especializados desde el inicio" onchange="updateProgress()" class="mt-0.5 text-blue-600 focus:ring-blue-500 rounded h-4 w-4">
+                                    <span class="text-sm text-slate-700"><strong class="text-slate-900">Roles especializados desde el inicio:</strong> Distribución clara entre investigación, ideación, prototipado y redacción.</span>
+                                </label>
+                                <label class="flex items-start space-x-3 p-3.5 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-blue-300 transition">
+                                    <input type="checkbox" name="orgMethod" value="Reuniones periódicas y seguimiento por hitos" onchange="updateProgress()" class="mt-0.5 text-blue-600 focus:ring-blue-500 rounded h-4 w-4">
+                                    <span class="text-sm text-slate-700"><strong class="text-slate-900">Reuniones periódicas y seguimiento por hitos:</strong> Planificación semanal con metas parciales y revisión conjunta.</span>
+                                </label>
+                                <label class="flex items-start space-x-3 p-3.5 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-blue-300 transition">
+                                    <input type="checkbox" name="orgMethod" value="División equitativa por módulos o secciones" onchange="updateProgress()" class="mt-0.5 text-blue-600 focus:ring-blue-500 rounded h-4 w-4">
+                                    <span class="text-sm text-slate-700"><strong class="text-slate-900">División equitativa por módulos o secciones:</strong> Trabajo paralelo por bloques que luego se consolidaron.</span>
+                                </label>
+                                <label class="flex items-start space-x-3 p-3.5 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-blue-300 transition">
+                                    <input type="checkbox" name="orgMethod" value="Trabajo reactivo cercano a las entregas" onchange="updateProgress()" class="mt-0.5 text-blue-600 focus:ring-blue-500 rounded h-4 w-4">
+                                    <span class="text-sm text-slate-700"><strong class="text-slate-900">Trabajo reactivo cercano a las entregas:</strong> Concentración de esfuerzos principalmente antes de cada plazo.</span>
+                                </label>
+                                <div class="p-3.5 bg-white rounded-xl border border-slate-200 space-y-2.5">
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" id="orgMethodOtherCheck" name="orgMethod" value="Otro" onchange="toggleOtherOrgInput(); updateProgress();" class="text-blue-600 focus:ring-blue-500 rounded h-4 w-4">
+                                        <span class="text-sm font-semibold text-slate-800">Otra modalidad de organización:</span>
+                                    </label>
+                                    <input type="text" id="orgMethodOtherText" disabled oninput="updateProgress()" placeholder="Especifica brevemente cómo se organizaron..."
+                                        class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-300 disabled:bg-slate-100 disabled:text-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question 6: Research & Ideation Effectiveness -->
+                        <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5 space-y-3">
+                            <label class="block text-sm font-bold text-slate-800">
+                                6. Efectividad del equipo en las etapas de investigación y generación de soluciones innovadoras <span class="text-rose-500">*</span>
+                            </label>
+                            <p class="text-xs text-slate-500">Evalúa qué tan sólido fue el levantamiento de información y su traducción en una propuesta creativa y viable.</p>
+                            <div class="grid grid-cols-5 gap-2 sm:gap-3 pt-1">
+                                <label class="bg-white border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:border-blue-500 transition flex flex-col items-center justify-center">
+                                    <input type="radio" name="researchEffectiveness" value="1" onchange="updateProgress()" class="text-blue-600 focus:ring-blue-500 h-4 w-4 mb-1.5">
+                                    <span class="text-base font-extrabold text-slate-800">1</span>
+                                    <span class="text-[10px] sm:text-[11px] text-slate-500 leading-tight mt-0.5">Muy bajo</span>
+                                </label>
+                                <label class="bg-white border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:border-blue-500 transition flex flex-col items-center justify-center">
+                                    <input type="radio" name="researchEffectiveness" value="2" onchange="updateProgress()" class="text-blue-600 focus:ring-blue-500 h-4 w-4 mb-1.5">
+                                    <span class="text-base font-extrabold text-slate-800">2</span>
+                                    <span class="text-[10px] sm:text-[11px] text-slate-500 leading-tight mt-0.5">Bajo</span>
+                                </label>
+                                <label class="bg-white border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:border-blue-500 transition flex flex-col items-center justify-center">
+                                    <input type="radio" name="researchEffectiveness" value="3" onchange="updateProgress()" class="text-blue-600 focus:ring-blue-500 h-4 w-4 mb-1.5">
+                                    <span class="text-base font-extrabold text-slate-800">3</span>
+                                    <span class="text-[10px] sm:text-[11px] text-slate-500 leading-tight mt-0.5">Aceptable</span>
+                                </label>
+                                <label class="bg-white border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:border-blue-500 transition flex flex-col items-center justify-center">
+                                    <input type="radio" name="researchEffectiveness" value="4" onchange="updateProgress()" class="text-blue-600 focus:ring-blue-500 h-4 w-4 mb-1.5">
+                                    <span class="text-base font-extrabold text-slate-800">4</span>
+                                    <span class="text-[10px] sm:text-[11px] text-slate-500 leading-tight mt-0.5">Bueno</span>
+                                </label>
+                                <label class="bg-white border border-slate-200 rounded-xl p-3 text-center cursor-pointer hover:border-blue-500 transition flex flex-col items-center justify-center">
+                                    <input type="radio" name="researchEffectiveness" value="5" onchange="updateProgress()" class="text-blue-600 focus:ring-blue-500 h-4 w-4 mb-1.5">
+                                    <span class="text-base font-extrabold text-slate-800">5</span>
+                                    <span class="text-[10px] sm:text-[11px] text-slate-500 leading-tight mt-0.5">Excelente</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Question 7: Decision Making & Conflict Resolution -->
+                        <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5 space-y-3">
+                            <label class="block text-sm font-bold text-slate-800">
+                                7. Mecanismo principal de toma de decisiones y resolución de desacuerdos <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                <label class="flex items-start space-x-3 p-3.5 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                                    <input type="radio" name="conflictResolution" value="Consenso y diálogo argumentado" onchange="updateProgress()" class="mt-0.5 text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <span class="text-sm text-slate-700 font-medium">Consenso y diálogo argumentado</span>
+                                </label>
+                                <label class="flex items-start space-x-3 p-3.5 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                                    <input type="radio" name="conflictResolution" value="Mediación de un coordinador o líder" onchange="updateProgress()" class="mt-0.5 text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <span class="text-sm text-slate-700 font-medium">Mediación de un coordinador o líder</span>
+                                </label>
+                                <label class="flex items-start space-x-3 p-3.5 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                                    <input type="radio" name="conflictResolution" value="Votación democrática del equipo" onchange="updateProgress()" class="mt-0.5 text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <span class="text-sm text-slate-700 font-medium">Votación democrática del equipo</span>
+                                </label>
+                                <label class="flex items-start space-x-3 p-3.5 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-blue-400 transition">
+                                    <input type="radio" name="conflictResolution" value="Evitación o falta de acuerdos claros" onchange="updateProgress()" class="mt-0.5 text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                    <span class="text-sm text-slate-700 font-medium">Evitación o falta de acuerdos claros</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Question 8: Brief Reflection -->
+                        <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5 space-y-2">
+                            <label for="teamReflection" class="block text-sm font-bold text-slate-800">
+                                8. Reflexión breve: Mayor acierto organizativo y principal obstáculo enfrentado <span class="text-slate-400 font-normal text-xs">(Opcional)</span>
+                            </label>
+                            <textarea id="teamReflection" rows="2" oninput="updateProgress()" placeholder="Ej. Nuestro mayor acierto fue validar temprano el prototipo con usuarios; el principal obstáculo fue compatibilizar horarios de reunión..."
+                                class="w-full px-4 py-3 bg-white rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition text-sm"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex flex-col-reverse sm:flex-row justify-between gap-3">
+                        <button type="button" onclick="goToStep(1)"
+                            class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-6 py-3.5 rounded-xl transition text-sm flex items-center justify-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            <span>Anterior</span>
+                        </button>
+                        <button type="button" onclick="validateStep2()"
+                            class="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white font-semibold px-7 py-3.5 rounded-xl transition text-sm shadow-sm flex items-center justify-center space-x-2">
+                            <span>Continuar a Evaluación Individual</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ==================== STEP 3: SELF & PEER EVALUATION WITH TABS ==================== -->
+                <div id="step3" class="hidden p-6 sm:p-10 space-y-6 fade-slide-in">
+                    <div class="border-b border-slate-100 pb-5">
+                        <span class="inline-flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+                            <span>Paso 3 de 3</span>
+                            <span>•</span>
+                            <span>Rúbrica Individual</span>
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-3 tracking-tight">Autoevaluación y Coevaluación</h2>
+                        <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">
+                            Selecciona cada pestaña para completar primero tu autoevaluación y luego la evaluación de cada compañero de equipo.
+                        </p>
+                    </div>
+
+                    <!-- Scale Legend Bar -->
+                    <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span class="font-bold text-slate-700 px-1">Escala de calificación:</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            <span class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg text-slate-700"><strong class="text-blue-800">1</strong> Muy bajo</span>
+                            <span class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg text-slate-700"><strong class="text-blue-800">2</strong> Bajo</span>
+                            <span class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg text-slate-700"><strong class="text-blue-800">3</strong> Aceptable</span>
+                            <span class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg text-slate-700"><strong class="text-blue-800">4</strong> Bueno</span>
+                            <span class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg text-slate-700"><strong class="text-blue-800">5</strong> Excelente</span>
+                        </div>
+                    </div>
+
+                    <!-- Member Navigation Tabs with Status Badges -->
+                    <div id="memberTabsNav" class="flex overflow-x-auto gap-2 pb-1" role="tablist">
+                        <!-- Dynamically generated tabs -->
+                    </div>
+
+                    <!-- Dynamic Evaluation Panels Container -->
+                    <div id="evaluationsContainer" class="space-y-6">
+                        <!-- Dynamically generated member cards -->
+                    </div>
+
+                    <!-- Bottom Submit & Navigation Bar -->
+                    <div class="pt-5 border-t border-slate-100 flex flex-col-reverse sm:flex-row justify-between items-center gap-3">
+                        <button type="button" onclick="goToStep(2)"
+                            class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-6 py-3.5 rounded-xl transition text-sm flex items-center justify-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            <span>Anterior</span>
+                        </button>
+
+                        <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-3">
+                            <button type="button" id="nextMemberTabBtn" onclick="goToNextMemberTab()"
+                                class="w-full sm:w-auto bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 font-semibold px-5 py-3.5 rounded-xl transition text-sm flex items-center justify-center space-x-2">
+                                <span>Siguiente integrante</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+
+                            <button type="submit"
+                                class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-7 py-3.5 rounded-xl transition text-sm shadow-sm flex items-center justify-center space-x-2">
+                                <span>Finalizar y Enviar Encuesta</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- ==================== CONFIRMATION & SUMMARY RECEIPT VIEW ==================== -->
+            <div id="summaryView" class="hidden p-6 sm:p-10 space-y-8 fade-slide-in">
+                <!-- Success Header Banner -->
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50/60 border border-emerald-200/80 rounded-2xl p-6 sm:p-8 text-center">
+                    <div class="w-14 h-14 bg-emerald-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <span class="inline-block text-xs font-bold uppercase tracking-widest text-emerald-700 bg-emerald-100/80 px-3 py-1 rounded-full mb-2">
+                        Comprobante Oficial • Curso Taller 3
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">¡Encuesta registrada con éxito!</h2>
+                    <p id="summarySentText" class="text-sm text-slate-600 max-w-xl mx-auto mt-2 leading-relaxed">
+                        Tus respuestas han sido consolidadas. Puedes enviar una copia detallada a tu correo o descargar el respaldo.
+                    </p>
+                </div>
+
+                <!-- Primary Email & Export Actions Card -->
+                <div class="bg-blue-950 text-white rounded-2xl p-5 sm:p-6 shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-center md:text-left">
+                        <h3 class="font-bold text-base sm:text-lg">Respaldo de tu Autoevaluación</h3>
+                        <p id="emailTargetSubtitle" class="text-xs sm:text-sm text-blue-200 mt-0.5">Envía el detalle estructurado directamente al correo registrado.</p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-2.5 w-full md:w-auto">
+                        <a id="mailtoActionBtn" href="#"
+                            class="w-full sm:w-auto bg-blue-500 hover:bg-blue-400 text-white font-bold px-5 py-3 rounded-xl transition text-xs sm:text-sm shadow-sm inline-flex items-center justify-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            <span>Enviar copia de mis respuestas a mi correo</span>
+                        </a>
+                        <button type="button" onclick="copyReceiptToClipboard()"
+                            class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold px-4 py-3 rounded-xl transition text-xs sm:text-sm inline-flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            <span>Copiar resumen</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Student Metadata Header -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Estudiante Informante</span>
+                        <h3 id="sumStudentName" class="text-lg font-bold text-slate-900">Nombre del Alumno</h3>
+                        <p id="sumStudentEmail" class="text-xs text-slate-500 mt-0.5">correo@ejemplo.com</p>
+                    </div>
+                    <div class="sm:text-right">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Marca de tiempo</span>
+                        <span id="sumTimestamp" class="text-xs font-semibold text-slate-700 bg-white border border-slate-200 px-3 py-1 rounded-lg inline-block mt-1">-</span>
+                    </div>
+                </div>
+
+                <!-- Dynamic Receipt Results (Early Exit OR Full Dashboard) -->
+                <div id="sumResultsContent" class="space-y-6">
+                    <!-- Populated via JavaScript -->
+                </div>
+
+                <!-- Secondary Download Bar -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <span class="text-xs font-semibold text-slate-600">Exportar archivo de respaldo estructurado:</span>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="downloadReceipt('csv')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-semibold px-3.5 py-2 rounded-xl transition text-xs">
+                            Descargar CSV
+                        </button>
+                        <button type="button" onclick="downloadReceipt('json')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-semibold px-3.5 py-2 rounded-xl transition text-xs">
+                            Descargar JSON
+                        </button>
+                        <button type="button" onclick="downloadReceipt('txt')" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-semibold px-3.5 py-2 rounded-xl transition text-xs">
+                            Descargar TXT
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Restart Action -->
+                <div class="pt-2 flex justify-center">
+                    <button type="button" onclick="window.location.reload()"
+                        class="text-slate-500 hover:text-blue-700 font-semibold text-xs sm:text-sm underline underline-offset-4 transition">
+                        Iniciar una nueva respuesta de encuesta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Minimal Academic Footer -->
+    <footer class="max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 text-center text-xs text-slate-400">
+        Curso Taller 3 • Instrumento de Evaluación de Participación, Investigación e Innovación en Equipo
+    </footer>
+
+    <script>
+        let currentStep = 1;
+        let activeMemberTabIndex = 0;
+        let lastSubmittedPayload = null;
+        let toastTimeout = null;
+
+        const criteriaList = [
+            {
+                id: 'compromiso',
+                num: 1,
+                label: 'Compromiso',
+                desc: 'Dedicación constante y actitud proactiva frente a los objetivos del equipo.',
+                group: 'participation'
+            },
+            {
+                id: 'responsabilidad',
+                num: 2,
+                label: 'Responsabilidad',
+                desc: 'Cumplimiento puntual de tareas asignadas, plazos y acuerdos internos.',
+                group: 'participation'
+            },
+            {
+                id: 'colaboracion',
+                num: 3,
+                label: 'Colaboración y organización',
+                desc: 'Participación activa en reuniones, comunicación efectiva y apoyo mutuo.',
+                group: 'participation'
+            },
+            {
+                id: 'calidad',
+                num: 4,
+                label: 'Calidad del trabajo',
+                desc: 'Rigor metodológico, prolijidad y nivel técnico de sus entregas.',
+                group: 'participation'
+            },
+            {
+                id: 'investigacion',
+                num: 5,
+                label: 'Aporte en investigación',
+                desc: 'Búsqueda, análisis crítico de fuentes/datos y sustento empírico del proyecto.',
+                group: 'innovation'
+            },
+            {
+                id: 'innovacion',
+                num: 6,
+                label: 'Pensamiento innovador y creativo',
+                desc: 'Generación de ideas originales, disruptivas y viables para resolver el problema.',
+                group: 'innovation'
+            },
+            {
+                id: 'significancia',
+                num: 7,
+                label: 'Significancia e impacto de sus aportes',
+                desc: 'Relevancia y valor determinante de sus contribuciones en el resultado final.',
+                group: 'innovation'
+            },
+            {
+                id: 'resolucion',
+                num: 8,
+                label: 'Resolución de problemas',
+                desc: 'Capacidad para destrabar cuellos de botella y proponer soluciones concretas.',
+                group: 'innovation'
+            }
+        ];
+
+        const roleOptions = [
+            'Investigador/a principal',
+            'Ideación e innovación',
+            'Coordinación y gestión',
+            'Prototipado / Diseño',
+            'Redacción y síntesis',
+            'Otro'
+        ];
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toastNotification');
+            const toastInner = document.getElementById('toastInner');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastMsg = document.getElementById('toastMessage');
+
+            toastMsg.textContent = message;
+            if (isError) {
+                toastInner.className = 'bg-rose-950 text-white px-4 py-3.5 rounded-2xl shadow-xl border border-rose-800 flex items-start space-x-3';
+                toastIcon.className = 'mt-0.5 flex-shrink-0 text-rose-400';
+                toastIcon.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            } else {
+                toastInner.className = 'bg-slate-900 text-white px-4 py-3.5 rounded-2xl shadow-xl border border-slate-700/60 flex items-start space-x-3';
+                toastIcon.className = 'mt-0.5 flex-shrink-0 text-emerald-400';
+                toastIcon.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+            }
+
+            toast.classList.remove('hidden');
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4200);
+        }
+
+        function updateStepperUI(step) {
+            for (let i = 1; i <= 3; i++) {
+                const item = document.getElementById(`stepper-item-${i}`);
+                const badge = document.getElementById(`stepper-badge-${i}`);
+                if (!item || !badge) continue;
+
+                if (i < step) {
+                    item.className = 'flex items-center space-x-2.5 p-2 rounded-xl bg-emerald-50/80 border border-emerald-200 transition-all';
+                    badge.className = 'w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0';
+                    badge.innerHTML = '✓';
+                } else if (i === step) {
+                    item.className = 'flex items-center space-x-2.5 p-2 rounded-xl bg-blue-50/80 border border-blue-300 shadow-xs transition-all';
+                    badge.className = 'w-6 h-6 rounded-full bg-blue-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0';
+                    badge.textContent = i;
+                } else {
+                    item.className = 'flex items-center space-x-2.5 p-2 rounded-xl bg-slate-50 border border-slate-200/70 opacity-65 transition-all';
+                    badge.className = 'w-6 h-6 rounded-full bg-slate-300 text-slate-700 text-xs font-bold flex items-center justify-center flex-shrink-0';
+                    badge.textContent = i;
+                }
+            }
+        }
+
+        function updateProgress() {
+            const name = document.getElementById('studentName').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            const partRadio = document.querySelector('input[name="isParticipating"]:checked');
+
+            let totalFields = 3;
+            let completedFields = 0;
+            if (name) completedFields++;
+            if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) completedFields++;
+            if (partRadio) completedFields++;
+
+            if (partRadio && partRadio.value === 'no') {
+                const pct = Math.round((completedFields / 3) * 100);
+                document.getElementById('progressPercentText').textContent = `${pct}%`;
+                document.getElementById('progressBarFill').style.width = `${pct}%`;
+                return;
+            }
+
+            // Step 2 fields (4 required)
+            totalFields += 4;
+            const teamSizeVal = document.getElementById('teamSize').value;
+            if (teamSizeVal) completedFields++;
+
+            const orgChecked = document.querySelectorAll('input[name="orgMethod"]:checked');
+            const otherCheck = document.getElementById('orgMethodOtherCheck');
+            const otherText = document.getElementById('orgMethodOtherText').value.trim();
+            if (orgChecked.length > 0 && (!otherCheck.checked || otherText.length > 0)) {
+                completedFields++;
+            }
+
+            if (document.querySelector('input[name="researchEffectiveness"]:checked')) completedFields++;
+            if (document.querySelector('input[name="conflictResolution"]:checked')) completedFields++;
+
+            // Step 3 fields (if teamSize selected)
+            const size = parseInt(teamSizeVal);
+            if (!isNaN(size) && size >= 2) {
+                // Self: role + contribution + 8 criteria = 10
+                totalFields += 10;
+                if (document.querySelector('select[name="self_role"]')?.value) completedFields++;
+                if (document.querySelector('input[name="self_contribution"]')?.value.trim()) completedFields++;
+                criteriaList.forEach(c => {
+                    if (document.querySelector(`input[name="self_${c.id}"]:checked`)) completedFields++;
+                });
+
+                // Peers: (size - 1) * (name + role + contribution + 8 criteria = 11)
+                for (let i = 1; i < size; i++) {
+                    totalFields += 11;
+                    if (document.querySelector(`input[name="peer_name_${i}"]`)?.value.trim()) completedFields++;
+                    if (document.querySelector(`select[name="peer_role_${i}"]`)?.value) completedFields++;
+                    if (document.querySelector(`input[name="peer_contribution_${i}"]`)?.value.trim()) completedFields++;
+                    criteriaList.forEach(c => {
+                        if (document.querySelector(`input[name="peer_${i}_${c.id}"]:checked`)) completedFields++;
+                    });
+                }
+            }
+
+            const pct = Math.min(100, Math.round((completedFields / totalFields) * 100));
+            document.getElementById('progressPercentText').textContent = `${pct}%`;
+            document.getElementById('progressBarFill').style.width = `${pct}%`;
+        }
+
+        function handleParticipationChange(isYes) {
+            const cardYes = document.getElementById('card-part-yes');
+            const cardNo = document.getElementById('card-part-no');
+            const inactiveNotice = document.getElementById('inactiveNotice');
+            const btn = document.getElementById('step1NextBtn');
+            const btnLabel = document.getElementById('step1BtnLabel');
+            const btnIcon = document.getElementById('step1BtnIcon');
+            const stepper2 = document.getElementById('stepper-item-2');
+            const stepper3 = document.getElementById('stepper-item-3');
+
+            if (isYes) {
+                cardYes.className = 'relative flex items-start space-x-3.5 p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-600 cursor-pointer shadow-xs transition-all';
+                cardNo.className = 'relative flex items-start space-x-3.5 p-4 rounded-2xl bg-white border-2 border-slate-200 cursor-pointer hover:border-amber-400 transition-all';
+                inactiveNotice.classList.add('hidden');
+                btn.className = 'w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white font-semibold px-7 py-3.5 rounded-xl transition shadow-sm flex items-center justify-center space-x-2 text-sm';
+                btnLabel.textContent = 'Continuar al Paso 2';
+                btnIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>';
+                stepper2.classList.remove('hidden');
+                stepper3.classList.remove('hidden');
+            } else {
+                cardNo.className = 'relative flex items-start space-x-3.5 p-4 rounded-2xl bg-amber-50/60 border-2 border-amber-500 cursor-pointer shadow-xs transition-all';
+                cardYes.className = 'relative flex items-start space-x-3.5 p-4 rounded-2xl bg-white border-2 border-slate-200 cursor-pointer hover:border-blue-400 transition-all';
+                inactiveNotice.classList.remove('hidden');
+                btn.className = 'w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-semibold px-7 py-3.5 rounded-xl transition shadow-sm flex items-center justify-center space-x-2 text-sm';
+                btnLabel.textContent = 'Enviar encuesta ahora';
+                btnIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
+                stepper2.classList.add('hidden');
+                stepper3.classList.add('hidden');
+            }
+            updateProgress();
+        }
+
+        function validateStep1() {
+            const name = document.getElementById('studentName').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            const partRadio = document.querySelector('input[name="isParticipating"]:checked');
+
+            if (!name) {
+                showToast('Por favor, ingresa tu nombre completo.', true);
+                document.getElementById('studentName').focus();
+                return;
+            }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showToast('Por favor, ingresa un correo electrónico válido.', true);
+                document.getElementById('studentEmail').focus();
+                return;
+            }
+            if (!partRadio) {
+                showToast('Por favor, indica si aún estás participando en el curso Taller 3.', true);
+                return;
+            }
+
+            if (partRadio.value === 'no') {
+                submitInactiveStudent(name, email);
+                return;
+            }
+
+            goToStep(2);
+        }
+
+        function goToStep(stepNumber) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
+
+            document.getElementById(`step${stepNumber}`).classList.remove('hidden');
+            currentStep = stepNumber;
+            updateStepperUI(stepNumber);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function selectTeamSize(size) {
+            const prevSize = document.getElementById('teamSize').value;
+            document.getElementById('teamSize').value = size;
+
+            document.querySelectorAll('.team-size-card').forEach(btn => {
+                const btnSize = parseInt(btn.getAttribute('data-size'));
+                if (btnSize === size) {
+                    btn.className = 'team-size-card group p-3.5 rounded-2xl bg-blue-50/70 border-2 border-blue-600 text-center shadow-xs transition-all flex flex-col items-center' + (size === 6 ? ' col-span-2 sm:col-span-1' : '');
+                } else {
+                    btn.className = 'team-size-card group p-3.5 rounded-2xl bg-white border-2 border-slate-200 hover:border-blue-400 text-center transition-all flex flex-col items-center' + (btnSize === 6 ? ' col-span-2 sm:col-span-1' : '');
+                }
+            });
+
+            document.getElementById('teamSizeHelperBadge').textContent = `${size} integrantes (Tú + ${size - 1} ${size - 1 === 1 ? 'compañero' : 'compañeros'})`;
+
+            if (String(prevSize) !== String(size)) {
+                generateEvaluationSections();
+            }
+            updateProgress();
+        }
+
+        function toggleOtherOrgInput() {
+            const checkbox = document.getElementById('orgMethodOtherCheck');
+            const input = document.getElementById('orgMethodOtherText');
+            input.disabled = !checkbox.checked;
+            if (checkbox.checked) {
+                input.focus();
+            } else {
+                input.value = '';
+            }
+        }
+
+        function validateStep2() {
+            const teamSize = document.getElementById('teamSize').value;
+            if (!teamSize) {
+                showToast('Por favor, selecciona el número total de integrantes del equipo (2 a 6).', true);
+                return;
+            }
+
+            const orgChecked = document.querySelectorAll('input[name="orgMethod"]:checked');
+            if (orgChecked.length === 0) {
+                showToast('Por favor, marca al menos una modalidad de organización del equipo.', true);
+                return;
+            }
+
+            const otherCheck = document.getElementById('orgMethodOtherCheck');
+            const otherText = document.getElementById('orgMethodOtherText').value.trim();
+            if (otherCheck.checked && !otherText) {
+                showToast('Por favor, especifica la otra modalidad de organización.', true);
+                document.getElementById('orgMethodOtherText').focus();
+                return;
+            }
+
+            const researchEff = document.querySelector('input[name="researchEffectiveness"]:checked');
+            if (!researchEff) {
+                showToast('Por favor, califica la efectividad en investigación y generación de soluciones.', true);
+                return;
+            }
+
+            const conflictRes = document.querySelector('input[name="conflictResolution"]:checked');
+            if (!conflictRes) {
+                showToast('Por favor, selecciona el mecanismo principal de resolución de desacuerdos.', true);
+                return;
+            }
+
+            if (document.getElementById('evaluationsContainer').children.length === 0) {
+                generateEvaluationSections();
+            }
+
+            // Update self display name inside Step 3 card
+            const studentName = document.getElementById('studentName').value.trim();
+            const selfNameDisplay = document.getElementById('selfEvaluatedNameDisplay');
+            if (selfNameDisplay) selfNameDisplay.textContent = studentName;
+
+            activeMemberTabIndex = 0;
+            switchMemberTab(0);
+            refreshMemberCompletionBadges();
+            goToStep(3);
+        }
+
+        function buildRoleSelect(name, memberIndex) {
+            const optionsHtml = roleOptions.map(r => `<option value="${r}">${r}</option>`).join('');
+            return `
+                <select name="${name}" onchange="onMemberInputChange(${memberIndex})"
+                    class="w-full mt-1.5 px-3.5 py-2.5 bg-white rounded-xl border border-slate-300 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none text-sm transition">
+                    <option value="">Selecciona el rol principal...</option>
+                    ${optionsHtml}
+                </select>
+            `;
+        }
+
+        function generateEvaluationSections() {
+            const size = parseInt(document.getElementById('teamSize').value);
+            if (isNaN(size) || size < 2) return;
+
+            const studentName = document.getElementById('studentName').value.trim() || 'Estudiante';
+            const tabsNav = document.getElementById('memberTabsNav');
+            const container = document.getElementById('evaluationsContainer');
+
+            let tabsHtml = '';
+            let panelsHtml = '';
+
+            // Index 0: Self Evaluation
+            tabsHtml += `
+                <button type="button" onclick="switchMemberTab(0)" id="member-tab-0"
+                    class="flex items-center space-x-2.5 px-4 py-2.5 rounded-xl border-2 border-blue-600 bg-blue-50 text-blue-900 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex-shrink-0">
+                    <span>Mi Autoevaluación</span>
+                    <span id="member-status-0" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Pendiente</span>
+                </button>
+            `;
+
+            panelsHtml += `
+                <div id="member-panel-0" class="member-panel space-y-6 fade-slide-in">
+                    <div class="bg-blue-50/50 border border-blue-200/80 rounded-2xl p-5 sm:p-6 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-blue-100 pb-3.5">
+                            <div>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">Integrante 1 de ${size} • Autoevaluación</span>
+                                <h3 id="selfEvaluatedNameDisplay" class="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">${escapeHtml(studentName)}</h3>
+                            </div>
+                            <span class="text-xs font-medium text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-lg self-start">
+                                Datos vinculados al Paso 1
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                                    Tu rol principal en el proyecto <span class="text-rose-500">*</span>
+                                </label>
+                                ${buildRoleSelect('self_role', 0)}
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                                    Principal aporte significativo (investigación e innovación) <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="text" name="self_contribution" oninput="onMemberInputChange(0)"
+                                    placeholder="Ej. Diseñé la metodología de investigación y propuse el prototipo funcional..."
+                                    class="w-full mt-1.5 px-3.5 py-2.5 bg-white rounded-xl border border-slate-300 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none text-sm transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    ${buildGroupedRubricMatrix('self', 0)}
+                </div>
+            `;
+
+            // Indices 1 .. size-1: Peers
+            for (let i = 1; i < size; i++) {
+                tabsHtml += `
+                    <button type="button" onclick="switchMemberTab(${i})" id="member-tab-${i}"
+                        class="flex items-center space-x-2.5 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-blue-300 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex-shrink-0">
+                        <span id="member-tab-label-${i}">Compañero ${i}</span>
+                        <span id="member-status-${i}" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Pendiente</span>
+                    </button>
+                `;
+
+                panelsHtml += `
+                    <div id="member-panel-${i}" class="member-panel hidden space-y-6 fade-slide-in">
+                        <div class="bg-slate-50/80 border border-slate-200 rounded-2xl p-5 sm:p-6 space-y-4">
+                            <div class="border-b border-slate-200/80 pb-3.5">
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Integrante ${i + 1} de ${size} • Coevaluación</span>
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">Evaluación del Compañero ${i}</h3>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                                        Nombre completo del compañero ${i} <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="text" name="peer_name_${i}" oninput="updatePeerTabName(${i}, this.value); onMemberInputChange(${i});"
+                                        placeholder="Nombre y apellido del compañero ${i}"
+                                        class="w-full mt-1.5 px-3.5 py-2.5 bg-white rounded-xl border border-slate-300 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none text-sm transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                                        Rol principal desempeñado <span class="text-rose-500">*</span>
+                                    </label>
+                                    ${buildRoleSelect(`peer_role_${i}`, i)}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                                    Principal aporte significativo al proyecto de investigación e innovación <span class="text-rose-500">*</span>
+                                </label>
+                                <input type="text" name="peer_contribution_${i}" oninput="onMemberInputChange(${i})"
+                                    placeholder="Describe cuál fue su contribución más relevante al equipo..."
+                                    class="w-full mt-1.5 px-3.5 py-2.5 bg-white rounded-xl border border-slate-300 text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none text-sm transition">
+                            </div>
+                        </div>
+
+                        ${buildGroupedRubricMatrix(`peer_${i}`, i)}
+                    </div>
+                `;
+            }
+
+            tabsNav.innerHTML = tabsHtml;
+            container.innerHTML = panelsHtml;
+            activeMemberTabIndex = 0;
+            updateNextMemberButtonVisibility();
+        }
+
+        function buildGroupedRubricMatrix(prefix, memberIndex) {
+            const participationCriteria = criteriaList.filter(c => c.group === 'participation');
+            const innovationCriteria = criteriaList.filter(c => c.group === 'innovation');
+
+            const renderBlockRows = (items, blockTitle, blockBadge, accentClass) => {
+                let rows = `
+                    <tr class="${accentClass}">
+                        <td colspan="6" class="py-2.5 px-4 text-xs font-bold uppercase tracking-wider">
+                            <div class="flex items-center justify-between">
+                                <span>${blockTitle}</span>
+                                <span class="text-[10px] font-semibold opacity-80">${blockBadge}</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                items.forEach(crit => {
+                    rows += `
+                        <tr class="hover:bg-blue-50/30 transition border-b border-slate-100 last:border-b-0">
+                            <td class="py-3.5 px-4">
+                                <div class="font-semibold text-slate-900 text-sm">${crit.num}. ${crit.label}</div>
+                                <div class="text-xs text-slate-500 mt-0.5 leading-snug">${crit.desc}</div>
+                            </td>
+                    `;
+                    for (let score = 1; score <= 5; score++) {
+                        rows += `
+                            <td class="py-3 px-1.5 text-center">
+                                <label class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50 cursor-pointer transition has-[:checked]:bg-blue-700 has-[:checked]:border-blue-700 has-[:checked]:text-white text-slate-700 font-bold text-xs shadow-2xs">
+                                    <input type="radio" name="${prefix}_${crit.id}" value="${score}" onchange="onMemberInputChange(${memberIndex})" class="sr-only">
+                                    <span>${score}</span>
+                                </label>
+                            </td>
+                        `;
+                    }
+                    rows += `</tr>`;
+                });
+                return rows;
+            };
+
+            return `
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[560px]">
+                            <thead>
+                                <tr class="bg-slate-100/90 border-b border-slate-200 text-xs text-slate-600 font-bold">
+                                    <th class="py-3.5 px-4 w-1/2">Criterios de Evaluación (1 a 5) <span class="text-rose-500">*</span></th>
+                                    <th class="py-2.5 px-1.5 text-center w-14">1<span class="block font-normal text-[10px] text-slate-400">M. bajo</span></th>
+                                    <th class="py-2.5 px-1.5 text-center w-14">2<span class="block font-normal text-[10px] text-slate-400">Bajo</span></th>
+                                    <th class="py-2.5 px-1.5 text-center w-14">3<span class="block font-normal text-[10px] text-slate-400">Acept.</span></th>
+                                    <th class="py-2.5 px-1.5 text-center w-14">4<span class="block font-normal text-[10px] text-slate-400">Bueno</span></th>
+                                    <th class="py-2.5 px-1.5 text-center w-14">5<span class="block font-normal text-[10px] text-slate-400">Excel.</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${renderBlockRows(participationCriteria, 'Bloque A — Participación y Responsabilidad', '4 criterios', 'bg-slate-50 text-slate-700 border-b border-slate-200')}
+                                ${renderBlockRows(innovationCriteria, 'Bloque B — Investigación, Innovación y Significancia', '4 criterios', 'bg-blue-50/70 text-blue-900 border-y border-blue-100')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updatePeerTabName(peerIdx, rawVal) {
+            const labelEl = document.getElementById(`member-tab-label-${peerIdx}`);
+            if (!labelEl) return;
+            const trimmed = rawVal.trim();
+            labelEl.textContent = trimmed ? trimmed.split(' ').slice(0, 2).join(' ') : `Compañero ${peerIdx}`;
+        }
+
+        function isMemberComplete(memberIndex) {
+            if (memberIndex === 0) {
+                const role = document.querySelector('select[name="self_role"]')?.value;
+                const contrib = document.querySelector('input[name="self_contribution"]')?.value.trim();
+                if (!role || !contrib) return false;
+                return criteriaList.every(c => Boolean(document.querySelector(`input[name="self_${c.id}"]:checked`)));
+            } else {
+                const pName = document.querySelector(`input[name="peer_name_${memberIndex}"]`)?.value.trim();
+                const pRole = document.querySelector(`select[name="peer_role_${memberIndex}"]`)?.value;
+                const pContrib = document.querySelector(`input[name="peer_contribution_${memberIndex}"]`)?.value.trim();
+                if (!pName || !pRole || !pContrib) return false;
+                return criteriaList.every(c => Boolean(document.querySelector(`input[name="peer_${memberIndex}_${c.id}"]:checked`)));
+            }
+        }
+
+        function refreshMemberCompletionBadges() {
+            const size = parseInt(document.getElementById('teamSize').value);
+            if (isNaN(size)) return;
+
+            for (let idx = 0; idx < size; idx++) {
+                const badge = document.getElementById(`member-status-${idx}`);
+                if (!badge) continue;
+                if (isMemberComplete(idx)) {
+                    badge.textContent = 'Completado ✓';
+                    badge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+                } else {
+                    badge.textContent = 'Pendiente';
+                    badge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+                }
+            }
+        }
+
+        function onMemberInputChange(memberIndex) {
+            refreshMemberCompletionBadges();
+            updateProgress();
+        }
+
+        function switchMemberTab(index) {
+            const size = parseInt(document.getElementById('teamSize').value);
+            if (isNaN(size)) return;
+            activeMemberTabIndex = index;
+
+            for (let i = 0; i < size; i++) {
+                const tab = document.getElementById(`member-tab-${i}`);
+                const panel = document.getElementById(`member-panel-${i}`);
+                if (!tab || !panel) continue;
+
+                if (i === index) {
+                    tab.className = 'flex items-center space-x-2.5 px-4 py-2.5 rounded-xl border-2 border-blue-600 bg-blue-50 text-blue-900 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex-shrink-0 shadow-2xs';
+                    panel.classList.remove('hidden');
+                } else {
+                    tab.className = 'flex items-center space-x-2.5 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-blue-300 font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex-shrink-0';
+                    panel.classList.add('hidden');
+                }
+            }
+            updateNextMemberButtonVisibility();
+        }
+
+        function updateNextMemberButtonVisibility() {
+            const size = parseInt(document.getElementById('teamSize').value);
+            const nextBtn = document.getElementById('nextMemberTabBtn');
+            if (!nextBtn || isNaN(size)) return;
+
+            if (activeMemberTabIndex < size - 1) {
+                nextBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        function goToNextMemberTab() {
+            const size = parseInt(document.getElementById('teamSize').value);
+            if (activeMemberTabIndex < size - 1) {
+                switchMemberTab(activeMemberTabIndex + 1);
+                document.getElementById('memberTabsNav').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function submitInactiveStudent(name, email) {
+            const timestamp = new Date().toLocaleString('es-CL', {
+                dateStyle: 'long',
+                timeStyle: 'short'
+            });
+
+            lastSubmittedPayload = {
+                curso: 'Curso Taller 3',
+                nombreEstudiante: name,
+                correoEstudiante: email,
+                estadoParticipacion: 'No participa en el curso',
+                fechaHoraEnvio: timestamp
+            };
+
+            document.getElementById('surveyForm').classList.add('hidden');
+            document.getElementById('stepperNav').classList.add('hidden');
+            document.getElementById('headerProgressContainer').classList.add('hidden');
+            document.getElementById('summaryView').classList.remove('hidden');
+
+            document.getElementById('sumStudentName').textContent = name;
+            document.getElementById('sumStudentEmail').textContent = email;
+            document.getElementById('sumTimestamp').textContent = timestamp;
+            document.getElementById('emailTargetSubtitle').textContent = `Destinatario configurado: ${email}`;
+            document.getElementById('summarySentText').textContent = `Se han registrado únicamente las respuestas completadas hasta el momento (Preguntas 1 a 3).`;
+
+            document.getElementById('sumResultsContent').innerHTML = `
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Detalle de Respuestas Registradas</span>
+                        <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full">Finalización Anticipada</span>
+                    </div>
+                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                            <dt class="text-xs text-slate-500 font-medium">1. Nombre completo del alumno</dt>
+                            <dd class="font-bold text-slate-900 mt-1">${escapeHtml(name)}</dd>
+                        </div>
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                            <dt class="text-xs text-slate-500 font-medium">2. Correo electrónico</dt>
+                            <dd class="font-bold text-slate-900 mt-1">${escapeHtml(email)}</dd>
+                        </div>
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 sm:col-span-2">
+                            <dt class="text-xs text-slate-500 font-medium">3. ¿Aún estás participando activamente en el curso Taller 3?</dt>
+                            <dd class="font-bold text-amber-800 mt-1">No, ya no participo en el curso</dd>
+                        </div>
+                    </dl>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        Las secciones de organización del equipo, autoevaluación y coevaluación fueron omitidas automáticamente conforme a tu respuesta en la pregunta 3.
+                    </p>
+                </div>
+            `;
+
+            configureMailtoLink();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast('Encuesta enviada con los datos registrados hasta este punto.');
+        }
+
+        function computeEvaluationMetrics(scoresMap) {
+            let totalSum = 0, totalCount = 0;
+            let partSum = 0, partCount = 0;
+            let innovSum = 0, innovCount = 0;
+
+            criteriaList.forEach(crit => {
+                const val = Number(scoresMap[crit.label]);
+                if (!isNaN(val) && val > 0) {
+                    totalSum += val;
+                    totalCount++;
+                    if (crit.group === 'participation') {
+                        partSum += val;
+                        partCount++;
+                    } else {
+                        innovSum += val;
+                        innovCount++;
+                    }
+                }
+            });
+
+            return {
+                generalAvg: totalCount ? Number((totalSum / totalCount).toFixed(2)) : 0,
+                participationAvg: partCount ? Number((partSum / partCount).toFixed(2)) : 0,
+                innovationAvg: innovCount ? Number((innovSum / innovCount).toFixed(2)) : 0
+            };
+        }
+
+        function validateAllStep3Evaluations(size) {
+            // Check Self (index 0)
+            const selfRole = document.querySelector('select[name="self_role"]')?.value;
+            const selfContrib = document.querySelector('input[name="self_contribution"]')?.value.trim();
+            if (!selfRole || !selfContrib) {
+                switchMemberTab(0);
+                showToast('Completa tu rol principal y tu aporte significativo en "Mi Autoevaluación".', true);
+                return false;
+            }
+            for (const crit of criteriaList) {
+                if (!document.querySelector(`input[name="self_${crit.id}"]:checked`)) {
+                    switchMemberTab(0);
+                    showToast(`Falta calificar "${crit.label}" en "Mi Autoevaluación".`, true);
+                    return false;
+                }
+            }
+
+            // Check Peers (1 .. size - 1)
+            for (let i = 1; i < size; i++) {
+                const pName = document.querySelector(`input[name="peer_name_${i}"]`)?.value.trim();
+                const pRole = document.querySelector(`select[name="peer_role_${i}"]`)?.value;
+                const pContrib = document.querySelector(`input[name="peer_contribution_${i}"]`)?.value.trim();
+
+                if (!pName || !pRole || !pContrib) {
+                    switchMemberTab(i);
+                    showToast(`Completa el nombre, rol y aporte significativo del Compañero ${i}.`, true);
+                    return false;
+                }
+
+                for (const crit of criteriaList) {
+                    if (!document.querySelector(`input[name="peer_${i}_${crit.id}"]:checked`)) {
+                        switchMemberTab(i);
+                        showToast(`Falta calificar "${crit.label}" para ${pName}.`, true);
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('studentName').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            const size = parseInt(document.getElementById('teamSize').value);
+
+            if (!validateAllStep3Evaluations(size)) {
+                return;
+            }
+
+            const timestamp = new Date().toLocaleString('es-CL', {
+                dateStyle: 'long',
+                timeStyle: 'short'
+            });
+
+            const orgMethods = [];
+            document.querySelectorAll('input[name="orgMethod"]:checked').forEach(cb => {
+                if (cb.value === 'Otro') {
+                    const customOrg = document.getElementById('orgMethodOtherText').value.trim();
+                    orgMethods.push(`Otro: ${customOrg}`);
+                } else {
+                    orgMethods.push(cb.value);
+                }
+            });
+
+            const researchEffVal = document.querySelector('input[name="researchEffectiveness"]:checked')?.value || '-';
+            const conflictResVal = document.querySelector('input[name="conflictResolution"]:checked')?.value || '-';
+            const teamReflectionVal = document.getElementById('teamReflection').value.trim();
+
+            const formData = {
+                curso: 'Curso Taller 3',
+                nombreEstudiante: name,
+                correoEstudiante: email,
+                estadoParticipacion: 'Sí, participa activamente en el curso',
+                fechaHoraEnvio: timestamp,
+                integrantesEquipo: size,
+                dinamicaEquipo: {
+                    organizacion: orgMethods,
+                    efectividadInvestigacionInnovacion: `${researchEffVal}/5`,
+                    resolucionDesacuerdos: conflictResVal,
+                    reflexionBreve: teamReflectionVal || 'Sin observaciones adicionales'
+                },
+                evaluations: []
+            };
+
+            // Self Evaluation
+            const selfRole = document.querySelector('select[name="self_role"]').value;
+            const selfContribution = document.querySelector('input[name="self_contribution"]').value.trim();
+            const selfEval = {};
+            criteriaList.forEach(crit => {
+                selfEval[crit.label] = document.querySelector(`input[name="self_${crit.id}"]:checked`).value;
+            });
+            const selfMetrics = computeEvaluationMetrics(selfEval);
+
+            formData.evaluations.push({
+                type: 'Autoevaluación',
+                evaluatedName: name,
+                title: `Autoevaluación: ${name}`,
+                role: selfRole,
+                keyContribution: selfContribution,
+                scores: selfEval,
+                metrics: selfMetrics
+            });
+
+            // Peer Evaluations
+            for (let i = 1; i < size; i++) {
+                const peerName = document.querySelector(`input[name="peer_name_${i}"]`).value.trim();
+                const peerRole = document.querySelector(`select[name="peer_role_${i}"]`).value;
+                const peerContribution = document.querySelector(`input[name="peer_contribution_${i}"]`).value.trim();
+                const peerEval = {};
+                criteriaList.forEach(crit => {
+                    peerEval[crit.label] = document.querySelector(`input[name="peer_${i}_${crit.id}"]:checked`).value;
+                });
+                const peerMetrics = computeEvaluationMetrics(peerEval);
+
+                formData.evaluations.push({
+                    type: 'Coevaluación',
+                    evaluatedName: peerName,
+                    title: `Compañero ${i}: ${peerName}`,
+                    role: peerRole,
+                    keyContribution: peerContribution,
+                    scores: peerEval,
+                    metrics: peerMetrics
+                });
+            }
+
+            lastSubmittedPayload = formData;
+            renderFullSummaryDashboard(formData);
+        }
+
+        function renderFullSummaryDashboard(formData) {
+            document.getElementById('surveyForm').classList.add('hidden');
+            document.getElementById('stepperNav').classList.add('hidden');
+            document.getElementById('headerProgressContainer').classList.add('hidden');
+            document.getElementById('summaryView').classList.remove('hidden');
+
+            document.getElementById('sumStudentName').textContent = formData.nombreEstudiante;
+            document.getElementById('sumStudentEmail').textContent = formData.correoEstudiante;
+            document.getElementById('sumTimestamp').textContent = formData.fechaHoraEnvio;
+            document.getElementById('emailTargetSubtitle').textContent = `Destinatario configurado: ${formData.correoEstudiante}`;
+            document.getElementById('summarySentText').textContent = `Resumen consolidado de organización del equipo, autoevaluación y coevaluación de ${formData.integrantesEquipo} integrantes.`;
+
+            const selfEval = formData.evaluations[0];
+            const peers = formData.evaluations.slice(1);
+
+            const teamAvgGeneral = peers.length
+                ? Number((peers.reduce((acc, p) => acc + p.metrics.generalAvg, 0) / peers.length).toFixed(2))
+                : selfEval.metrics.generalAvg;
+
+            const teamAvgPart = peers.length
+                ? Number((peers.reduce((acc, p) => acc + p.metrics.participationAvg, 0) / peers.length).toFixed(2))
+                : selfEval.metrics.participationAvg;
+
+            const teamAvgInnov = peers.length
+                ? Number((peers.reduce((acc, p) => acc + p.metrics.innovationAvg, 0) / peers.length).toFixed(2))
+                : selfEval.metrics.innovationAvg;
+
+            const renderBarWidth = (val) => `${Math.min(100, Math.max(5, (val / 5) * 100))}%`;
+
+            let html = `
+                <!-- KPI Comparative Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">Promedio General</span>
+                        <div class="mt-2 flex items-baseline justify-between">
+                            <div>
+                                <span class="text-2xl font-extrabold text-slate-900">${selfEval.metrics.generalAvg.toFixed(2)}</span>
+                                <span class="text-xs text-slate-400 font-medium">/ 5.00 (Tú)</span>
+                            </div>
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg">
+                                Equipo: ${teamAvgGeneral.toFixed(2)}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Participación y Resp.</span>
+                        <div class="mt-2 flex items-baseline justify-between">
+                            <div>
+                                <span class="text-2xl font-extrabold text-slate-900">${selfEval.metrics.participationAvg.toFixed(2)}</span>
+                                <span class="text-xs text-slate-400 font-medium">/ 5.00 (Tú)</span>
+                            </div>
+                            <span class="text-xs font-semibold bg-emerald-50 text-emerald-800 px-2.5 py-1 rounded-lg">
+                                Equipo: ${teamAvgPart.toFixed(2)}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-700">Investigación e Innov.</span>
+                        <div class="mt-2 flex items-baseline justify-between">
+                            <div>
+                                <span class="text-2xl font-extrabold text-slate-900">${selfEval.metrics.innovationAvg.toFixed(2)}</span>
+                                <span class="text-xs text-slate-400 font-medium">/ 5.00 (Tú)</span>
+                            </div>
+                            <span class="text-xs font-semibold bg-indigo-50 text-indigo-800 px-2.5 py-1 rounded-lg">
+                                Equipo: ${teamAvgInnov.toFixed(2)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Comparative Bar Chart (CSS/SVG Clean Chart) -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Gráfico Comparativo de Desempeño por Integrante</h4>
+                            <p class="text-xs text-slate-500">Comparación visual entre Participación/Responsabilidad e Investigación/Innovación (escala 1 a 5).</p>
+                        </div>
+                        <div class="flex items-center space-x-4 text-xs font-semibold">
+                            <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-sm bg-emerald-500 inline-block"></span><span>Participación/Resp.</span></span>
+                            <span class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-sm bg-blue-600 inline-block"></span><span>Investigación/Innov.</span></span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 pt-1">
+                        ${formData.evaluations.map(ev => `
+                            <div class="space-y-1.5">
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="font-bold text-slate-800">${escapeHtml(ev.evaluatedName)} <span class="font-normal text-slate-400">(${ev.type})</span></span>
+                                    <span class="font-bold text-blue-800">General: ${ev.metrics.generalAvg.toFixed(2)} / 5</span>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden flex items-center">
+                                        <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: ${renderBarWidth(ev.metrics.participationAvg)}"></div>
+                                    </div>
+                                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden flex items-center">
+                                        <div class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: ${renderBarWidth(ev.metrics.innovationAvg)}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Team Organization Summary Card -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-2xs space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h4 class="font-bold text-slate-900 text-sm sm:text-base">Organización y Dinámica del Equipo (${formData.integrantesEquipo} integrantes)</h4>
+                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg">Paso 2</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                            <span class="text-slate-500 font-medium block">Modalidad de organización:</span>
+                            <span class="text-slate-900 font-bold mt-1 block">${escapeHtml(formData.dinamicaEquipo.organizacion.join(' • '))}</span>
+                        </div>
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                            <span class="text-slate-500 font-medium block">Efectividad investigación e innovación:</span>
+                            <span class="text-blue-700 font-extrabold text-sm mt-1 block">${escapeHtml(formData.dinamicaEquipo.efectividadInvestigacionInnovacion)}</span>
+                        </div>
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                            <span class="text-slate-500 font-medium block">Resolución de desacuerdos:</span>
+                            <span class="text-slate-900 font-bold mt-1 block">${escapeHtml(formData.dinamicaEquipo.resolucionDesacuerdos)}</span>
+                        </div>
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                            <span class="text-slate-500 font-medium block">Reflexión sobre acierto u obstáculo:</span>
+                            <span class="text-slate-900 font-bold mt-1 block">${escapeHtml(formData.dinamicaEquipo.reflexionBreve)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Table per Member -->
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
+                    <div class="p-4 sm:p-5 border-b border-slate-100">
+                        <h4 class="font-bold text-slate-900 text-sm sm:text-base">Tabla Consolidada por Integrante</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs min-w-[540px]">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 font-bold">
+                                    <th class="py-3 px-4">Integrante</th>
+                                    <th class="py-3 px-4">Rol Principal</th>
+                                    <th class="py-3 px-3 text-center">Bloque A (Part.)</th>
+                                    <th class="py-3 px-3 text-center">Bloque B (Innov.)</th>
+                                    <th class="py-3 px-4 text-center text-blue-800">Promedio Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                ${formData.evaluations.map(ev => `
+                                    <tr class="hover:bg-slate-50/80">
+                                        <td class="py-3 px-4 font-bold text-slate-900">${escapeHtml(ev.title)}</td>
+                                        <td class="py-3 px-4 text-slate-600">${escapeHtml(ev.role)}</td>
+                                        <td class="py-3 px-3 text-center font-semibold text-emerald-700">${ev.metrics.participationAvg.toFixed(2)}</td>
+                                        <td class="py-3 px-3 text-center font-semibold text-blue-700">${ev.metrics.innovationAvg.toFixed(2)}</td>
+                                        <td class="py-3 px-4 text-center font-extrabold text-slate-900">${ev.metrics.generalAvg.toFixed(2)} / 5</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Detailed Individual Breakdown Cards -->
+                <div class="space-y-4">
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base px-1">Desglose Detallado de Rúbricas y Aportes</h4>
+                    ${formData.evaluations.map((evalItem, idx) => `
+                        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs space-y-3.5">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                                <div class="flex items-center space-x-2.5">
+                                    <span class="w-6 h-6 rounded-full ${idx === 0 ? 'bg-blue-700' : 'bg-slate-700'} text-white text-xs font-bold flex items-center justify-center">${idx + 1}</span>
+                                    <h5 class="font-bold text-slate-900 text-sm">${escapeHtml(evalItem.title)}</h5>
+                                </div>
+                                <span class="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded-lg">${escapeHtml(evalItem.role)}</span>
+                            </div>
+                            <div class="bg-blue-50/60 border border-blue-100 rounded-xl p-3 text-xs text-slate-800">
+                                <strong class="text-blue-950">Principal aporte significativo:</strong> ${escapeHtml(evalItem.keyContribution)}
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                                ${Object.entries(evalItem.scores).map(([crit, sc]) => `
+                                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-xl text-center">
+                                        <span class="block text-[11px] text-slate-500 font-medium leading-tight">${crit}</span>
+                                        <span class="text-base font-extrabold text-blue-800 mt-1 block">${sc} <span class="text-xs font-normal text-slate-400">/5</span></span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('sumResultsContent').innerHTML = html;
+            configureMailtoLink();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast('¡Encuesta completada y comprobante generado con éxito!');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function buildPlainTextSummary(data) {
+            let lines = [
+                `COMPROBANTE DE ENCUESTA - ${data.curso.toUpperCase()}`,
+                `============================================================`,
+                `Nombre del alumno: ${data.nombreEstudiante}`,
+                `Correo electrónico: ${data.correoEstudiante}`,
+                `Participación en el curso: ${data.estadoParticipacion}`,
+                `Fecha y hora de registro: ${data.fechaHoraEnvio}`
+            ];
+
+            if (data.dinamicaEquipo) {
+                lines.push(`\n--- ORGANIZACIÓN Y DINÁMICA DEL EQUIPO (${data.integrantesEquipo} integrantes) ---`);
+                lines.push(`• Modalidad de organización: ${data.dinamicaEquipo.organizacion.join(', ')}`);
+                lines.push(`• Efectividad investigación e innovación: ${data.dinamicaEquipo.efectividadInvestigacionInnovacion}`);
+                lines.push(`• Resolución de desacuerdos: ${data.dinamicaEquipo.resolucionDesacuerdos}`);
+                lines.push(`• Reflexión breve: ${data.dinamicaEquipo.reflexionBreve}`);
+            }
+
+            if (data.evaluations && data.evaluations.length > 0) {
+                lines.push(`\n--- AUTOEVALUACIÓN Y COEVALUACIÓN DEL EQUIPO ---`);
+                data.evaluations.forEach((ev, idx) => {
+                    lines.push(`\n${idx + 1}. ${ev.title} | Rol: ${ev.role}`);
+                    lines.push(`   Promedio General: ${ev.metrics.generalAvg.toFixed(2)}/5 | Participación/Resp.: ${ev.metrics.participationAvg.toFixed(2)}/5 | Investigación/Innov.: ${ev.metrics.innovationAvg.toFixed(2)}/5`);
+                    lines.push(`   Principal aporte significativo: ${ev.keyContribution}`);
+                    for (const [crit, val] of Object.entries(ev.scores)) {
+                        lines.push(`   - ${crit}: ${val}/5`);
+                    }
+                });
+            }
+            return lines.join('\n');
+        }
+
+        function configureMailtoLink() {
+            if (!lastSubmittedPayload) return;
+            const subject = encodeURIComponent(`Comprobante Autoevaluación Taller 3 - ${lastSubmittedPayload.nombreEstudiante}`);
+            const body = encodeURIComponent(buildPlainTextSummary(lastSubmittedPayload));
+            const mailtoBtn = document.getElementById('mailtoActionBtn');
+            mailtoBtn.href = `mailto:${encodeURIComponent(lastSubmittedPayload.correoEstudiante)}?subject=${subject}&body=${body}`;
+        }
+
+        function copyReceiptToClipboard() {
+            if (!lastSubmittedPayload) return;
+            const text = buildPlainTextSummary(lastSubmittedPayload);
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Resumen copiado al portapapeles.');
+            } catch (err) {
+                showToast('No se pudo copiar automáticamente. Usa las opciones de descarga.', true);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function downloadReceipt(format) {
+            if (!lastSubmittedPayload) return;
+            let content = '';
+            let mimeType = 'text/plain;charset=utf-8;';
+            const safeName = lastSubmittedPayload.nombreEstudiante.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+            const filename = `encuesta_taller3_${safeName}.${format}`;
+
+            if (format === 'json') {
+                content = JSON.stringify(lastSubmittedPayload, null, 2);
+                mimeType = 'application/json;charset=utf-8;';
+            } else if (format === 'csv') {
+                mimeType = 'text/csv;charset=utf-8;';
+                if (!lastSubmittedPayload.evaluations || lastSubmittedPayload.evaluations.length === 0) {
+                    content = `"Curso","Nombre","Correo","Participacion","FechaHora"\n` +
+                              `"${lastSubmittedPayload.curso}","${lastSubmittedPayload.nombreEstudiante}","${lastSubmittedPayload.correoEstudiante}","${lastSubmittedPayload.estadoParticipacion}","${lastSubmittedPayload.fechaHoraEnvio}"`;
+                } else {
+                    const headers = [
+                        'Curso', 'NombreEstudiante', 'Correo', 'Participacion', 'FechaHora',
+                        'IntegrantesEquipo', 'Organizacion', 'EfectividadInvestigacion', 'ResolucionDesacuerdos', 'Reflexion',
+                        'Evaluado', 'Rol', 'AporteSignificativo',
+                        'Compromiso', 'Responsabilidad', 'ColaboracionOrganizacion', 'CalidadTrabajo',
+                        'AporteInvestigacion', 'PensamientoInnovador', 'SignificanciaImpacto', 'ResolucionProblemas',
+                        'PromedioParticipacionResp', 'PromedioInvestigacionInnov', 'PromedioGeneral'
+                    ];
+                    const rows = [headers.map(h => `"${h}"`).join(',')];
+                    const dyn = lastSubmittedPayload.dinamicaEquipo;
+                    lastSubmittedPayload.evaluations.forEach(ev => {
+                        const row = [
+                            lastSubmittedPayload.curso,
+                            lastSubmittedPayload.nombreEstudiante,
+                            lastSubmittedPayload.correoEstudiante,
+                            lastSubmittedPayload.estadoParticipacion,
+                            lastSubmittedPayload.fechaHoraEnvio,
+                            lastSubmittedPayload.integrantesEquipo,
+                            dyn.organizacion.join('; '),
+                            dyn.efectividadInvestigacionInnovacion,
+                            dyn.resolucionDesacuerdos,
+                            dyn.reflexionBreve.replace(/"/g, '""'),
+                            ev.title,
+                            ev.role,
+                            ev.keyContribution.replace(/"/g, '""'),
+                            ev.scores['Compromiso'],
+                            ev.scores['Responsabilidad'],
+                            ev.scores['Colaboración y organización'],
+                            ev.scores['Calidad del trabajo'],
+                            ev.scores['Aporte en investigación'],
+                            ev.scores['Pensamiento innovador y creativo'],
+                            ev.scores['Significancia e impacto de sus aportes'],
+                            ev.scores['Resolución de problemas'],
+                            ev.metrics.participationAvg.toFixed(2),
+                            ev.metrics.innovationAvg.toFixed(2),
+                            ev.metrics.generalAvg.toFixed(2)
+                        ];
+                        rows.push(row.map(v => `"${v}"`).join(','));
+                    });
+                    content = rows.join('\n');
+                }
+            } else {
+                content = buildPlainTextSummary(lastSubmittedPayload);
+            }
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
